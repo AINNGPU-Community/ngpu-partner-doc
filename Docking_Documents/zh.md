@@ -62,7 +62,7 @@ data|string|进行透传的数据内容（可以保存原API接口中的Request 
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|int|返回码
+result_code|string|用户的BTC地址（可选项，如果存在则会检测用户的地址中是否有AINN资产，如果为空则不检查）
 msg|string|返回的信息内容
 data|string|返回任务结果（这里采用透传方式，将原API接口返回的Response Body放入此参数中）
 
@@ -77,14 +77,16 @@ data|string|返回任务结果（这里采用透传方式，将原API接口返�
 ####  原有API接口
 
 * 协议类型：POST
-* 协议地址：https://***/img2img
+* 协议地址：https://***/sdapi/v1/img2img
 * Request Body
+
 ```shell
 {
     "image_url": "https://ainngpu.io/image/1683730315image.jpeg",
     "prompt": "manicured claws, score_9, score_8_up, score_7_up, score_6_up, score_5_up, score_4_up, 1girl, realistic, extremely detailed, high quality, , beautiful eyes, cat woman, black suit, character concept,night time, dark shadows, dutch angle"
 }
 ```
+
 * Response Body
 ```shell
 {
@@ -96,7 +98,14 @@ data|string|返回任务结果（这里采用透传方式，将原API接口返�
 
 #### 对接后API接口
 * 协议类型：POST
-* 协议地址：https://ainngpu.io/user/img2img
+* 协议地址：https://ainngpu.io/user/schedulingTask?paramUrl=sdapi/v1/img2img&paramPort=8080
+
+Parameter:
+- paramUrl: 在调用计算节点时使用的URL路径。
+- paramPort: 调用算力节点是使用的端口（Docker镜像在启动时所映射出来的端口）
+
+**_这两个参数是为了保障apiServer在进行数据中转时能都正确的中转给算力节点的Docker镜像_**
+
 * Request Body
 ```shell
 {
@@ -109,7 +118,6 @@ Field Name | Field Type | Field Meaning
 btc_address|string|用户的BTC地址（可选项，如果存在则会检测用户的地址中是否有AINN资产，如果为空则不检查）
 data|string|进行透传的数据内容（可以保存原API接口中的Request Body内容）
 
-
 * Response Body
 ```shell
 {
@@ -120,7 +128,7 @@ data|string|进行透传的数据内容（可以保存原API接口中的Request 
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|int|返回码
+result_code|string|用户的BTC地址（可选项，如果存在则会检测用户的地址中是否有AINN资产，如果为空则不检查）
 msg|string|返回的信息内容
 data|string|返回任务结果（这里采用透传方式，将原API接口返回的Response Body放入此参数中）
 taskID|string|返回查询的任务ID
@@ -143,14 +151,14 @@ taskID|string|返回查询的任务ID
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|int|返回码
+result_code|string|用户的BTC地址（可选项，如果存在则会检测用户的地址中是否有AINN资产，如果为空则不检查）
 msg|string|返回的信息内容
 taskID|string|返回查询的任务ID
 
 
 #### 对接后API接口
 * 协议类型：GET
-* 协议地址：https://***/img2img&taskID=
+* 协议地址：https://ainngpu.io/user/queryTask&taskID=20230423_11_23_05_10279
 
 * Response Body
 ```shell
@@ -163,7 +171,7 @@ taskID|string|返回查询的任务ID
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|int|返回码
+result_code|string|用户的BTC地址（可选项，如果存在则会检测用户的地址中是否有AINN资产，如果为空则不检查）
 msg|string|返回的信息内容
 taskID|string|返回查询的任务ID
 data|string|查询返回结果
@@ -175,7 +183,7 @@ data|string|查询返回结果
 * 作用：检测输入的BTC地址是否拥有BRC20指定的铭文。
 
 * 协议类型：GET
-* 协议地址：https://***/brc20/checkAddress&address=bc1pp8vyhh2ma0ntzjwr26xxrn5r0w296yu68wdwle5rrhgtv3a2lgkqtyayus
+* 协议地址：https://ainngpu.io/brc20/checkAddress&address=bc1pp8vyhh2ma0ntzjwr26xxrn5r0w296yu68wdwle5rrhgtv3a2lgkqtyayus
 
 * Response Body
 ```shell

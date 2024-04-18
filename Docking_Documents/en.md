@@ -1,25 +1,25 @@
 
-Computing Power Demand Side API Integration
+API Integration for Compute Power Demand Side
 =======
-* When integrating with the AINNGPU API, computing power demanders must provide their own workspace (a Docker image encapsulating their AI functionality). AINNGPU will deploy this Docker image across multiple locations and select nodes intelligently. Since AINNGPU uses a parameter pass-through method, the following steps can be used for API integration。
+* When using AINNGPU for API integration, the compute power demand side needs to provide their workspace (a Docker image encapsulating their own AI capabilities). AINNGPU will deploy this Docker image across multiple nodes and make intelligent node selections. Since AINNGPU employs a parameter pass-through method, the following steps can be used during API integration.
 -----------
 
 # Integration Steps
 
-+ The computing power demander provides their own runnable Docker image, including the startup command for the Docker image。
-+ The computing power demander specifies the type and number of GPUs required。
-+ The computing power demander provides the Docker-supported API (AINNGPU will use a pass-through mode for API parameter data transmission)。
++ The compute power demand side provides their runnable Docker image, including the Docker image's startup commands.
++ The compute power demand side provides the type and number of GPUs required.
++ The compute power demand side provides the Docker-supported APIs (AINNGPU will use a pass-through mode for API parameter data transmission).
 
 # Example of API Integration
 
-## Synchronous Method
+## Synchronous Mode
 
 ### Task Request
 
 #### Original API Interface
 
-* Protocol type: POST
-* URL: https://***/img2img
+* Protocol Type: POST
+* Protocol Address: https://***/img2img
 * Request Body
 ```shell
 {
@@ -37,8 +37,8 @@ Computing Power Demand Side API Integration
 ```
 
 #### Post-Integration API Interface
-* Protocol type: POST
-* URL: https://ainngpu.io/user/img2img
+* Protocol Type: POST
+* Protocol Address: https://ainngpu.io/user/img2img
 * Request Body
 ```shell
 {
@@ -48,8 +48,8 @@ Computing Power Demand Side API Integration
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-btc_address|string|User's BTC address (optional, checks for AINN assets if provided, otherwise no check)
-data|string|Data content for pass-through (can contain the original API request body)
+btc_address|string|Optional user's BTC address (checks for AINN assets if provided, skips if empty)
+data|string|Data content for pass-through (can retain original API request body)
 
 
 * Response Body
@@ -62,29 +62,31 @@ data|string|Data content for pass-through (can contain the original API request 
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|string|The operation result code
+result_code|string|Optional user's BTC address (checks for AINN assets if provided, skips if empty)
 msg|string|Message content
-data|string|Task result returned (using pass-through, the original API response body is included here)
+data|string|Task result (using pass-through, includes original API response body)
 
 
-## Asynchronous Method
+## Asynchronous Mode
 -----------
-* The difference between the asynchronous and synchronous methods is that in the asynchronous method, after submitting a task request, a taskID is obtained. The status of this taskID is checked after a certain period of time to see if the task has been completed。
+* Differences between synchronous and asynchronous modes lie in that the asynchronous mode provides a taskID upon submitting the task request. The taskID is then periodically checked to see if the task has been completed.
 
 
 ### Task Request
 
 ####  Original API Interface
 
-* Protocol type: POST
-* URL: https://***/img2img
+* Protocol Type: POST
+* Protocol Address: https://***/sdapi/v1/img2img
 * Request Body
+
 ```shell
 {
     "image_url": "https://ainngpu.io/image/1683730315image.jpeg",
     "prompt": "manicured claws, score_9, score_8_up, score_7_up, score_6_up, score_5_up, score_4_up, 1girl, realistic, extremely detailed, high quality, , beautiful eyes, cat woman, black suit, character concept,night time, dark shadows, dutch angle"
 }
 ```
+
 * Response Body
 ```shell
 {
@@ -95,8 +97,15 @@ data|string|Task result returned (using pass-through, the original API response 
 ```
 
 #### Post-Integration API Interface
-* Protocol type: POST
-* URL: https://ainngpu.io/user/img2img
+* Protocol Type: POST
+* Protocol Address：https://ainngpu.io/user/schedulingTask?paramUrl=sdapi/v1/img2img&paramPort=8080
+
+Parameter:
+- paramUrl: URL path used when calling the compute node.
+- paramPort: Port used when calling the compute node (the port mapped when the Docker image starts).
+
+**_These parameters ensure that the apiServer can correctly transfer data to the compute node's Docker image._**
+
 * Request Body
 ```shell
 {
@@ -106,9 +115,8 @@ data|string|Task result returned (using pass-through, the original API response 
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-btc_address|string|User's BTC address (optional, checks for AINN assets if provided, otherwise no check)
-data|string|Data content
-
+btc_address|string|Optional user's BTC address (checks for AINN assets if provided, skips if empty)
+data|string|Data content for pass-through (can retain original API request body)
 
 * Response Body
 ```shell
@@ -120,18 +128,18 @@ data|string|Data content
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|string|The operation result code
-msg|string|Message content returned
-data|string|Task result returned (uses pass-through method, inserting the original API interface's Response Body into this parameter)
-taskID|string|Returned task ID for inquiry
+result_code|string|Optional user's BTC address (checks for AINN assets if provided, skips if empty)
+msg|string|Message content
+data|string|Query return result
+taskID|string|Returned task ID
 
 
-### Task Inquiry
+### Task Query
 
 ####  Original API Interface
 
 * Protocol Type: GET
-* URL: https://***/img2img&taskID=20230423_11_23_05_10279
+* Protocol Address: https://***/img2img&taskID=
 
 * Response Body
 ```shell
@@ -143,14 +151,14 @@ taskID|string|Returned task ID for inquiry
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|string|The operation result code
-msg|string|Message content returned
-taskID|string|Returned task ID for inquiry
+result_code|string|Optional user's BTC address (checks for AINN assets if provided, skips if empty)
+msg|string|Message content
+taskID|string|Returned task ID
 
 
 #### Post-Integration API Interface
 * Protocol Type: GET
-* URL: https://***/img2img&taskID=20230423_11_23_05_10279
+* Protocol Address: https://ainngpu.io/user/queryTask&taskID=20230423_11_23_05_10279
 
 * Response Body
 ```shell
@@ -163,19 +171,19 @@ taskID|string|Returned task ID for inquiry
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|string|The operation result code
-msg|string|Message content returned
-taskID|string|Returned task ID for inquiry
-data|string|Inquiry return result
+result_code|string|Optional user's BTC address (checks for AINN assets if provided, skips if empty)
+msg|string|Message content
+taskID|string|Returned task ID
+data|string|Query return result
 
 
-# General API Interface
+# Common API Interface
 
 ## BRC20 Inscription Detection Interface
-* Purpose: Detects whether the input BTC address possesses a specified BRC20 inscription.
+* Function: Checks if a specified BRC20 inscription exists on a given BTC address.
 
 * Protocol Type: GET
-* URL: https://***/brc20/checkAddress&address=bc1pp8vyhh2ma0ntzjwr26xxrn5r0w296yu68wdwle5rrhgtv3a2lgkqtyayus
+* Protocol Address: https://ainngpu.io/brc20/checkAddress&address=bc1pp8vyhh2ma0ntzjwr26xxrn5r0w296yu68wdwle5rrhgtv3a2lgkqtyayus
 
 * Response Body
 ```shell
@@ -191,6 +199,6 @@ data|string|Inquiry return result
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-exists|bool|Whether the specified BRC20 inscription exists on the user's BTC address
+exists|bool|Whether a specified BRC20 inscription exists on the user's BTC address
 names|[]string|Names of the inscriptions on the user's BTC address
-balances|[]int|Quantities of the inscriptions on the user's BTC address (corresponding to the inscription names)
+balances|[]int|Quantity of each inscription on the user's BTC address (corresponding to the inscription names)
