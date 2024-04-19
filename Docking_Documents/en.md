@@ -99,7 +99,7 @@ data|string|Task result (using pass-through, includes original API response body
 #### Post-Integration API Interface
 * Protocol Type: POST
 * Protocol Address：https://ainngpu.io/user/schedulingTask?paramUrl=sdapi/v1/img2img&paramPort=8080
-* Header：Authorization：Bearer Bearer Workspace ID
+* Header：Authorization：Bearer Workspace ID
 
 Parameter:
 - paramUrl: URL path used when calling the compute node.

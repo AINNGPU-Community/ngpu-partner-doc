@@ -99,7 +99,7 @@ data|string|Task result (using pass-through, includes original API response body
 #### Post-Integration API Interface
 * Protocol Type: POST
 * Protocol Address：https://ainngpu.io/user/schedulingTask?paramUrl=sdapi/v1/img2img&paramPort=8080
-* Header：Authorization：Bearer Bearer Workspace ID
+* Header：Authorization：Bearer Workspace ID
 
 Parameter:
 - paramUrl: URL path used when calling the compute node.
@@ -209,7 +209,7 @@ balances|[]int|Quantity of each inscription on the user's BTC address (correspon
 
 * Protocol Type: GET
 * URL：https://ainngpu.io/user/queryTaskList?startTime=2024-04-11&endTime=2024-04-20
-* Header：Authorization：Bearer Bearer Workspace ID
+* Header：Authorization：Bearer Workspace ID
 **_startTime is optional; if not provided, the default value is 1970-01-01. endTime is optional; if not provided, the default value is 2099-01-01._**
 
 * Response Body
