@@ -209,7 +209,8 @@ balances|[]int|用户BTC地址上存在的铭文数量（与铭文名称对应�
 
 * 协议类型：GET
 * 协议地址：https://ainngpu.io/user/queryTaskList?startTime=2024-04-11&endTime=2024-04-20
-* 协议头：Authorization：Bearer 工作空间ID
+* 协议头：Authorization：Bearer 工作空间ID  
+
 **_startTime非必填，如果没有，则按照1970-01-01时间取值，endTime非必填，如果没有则按照2099-01-01取值_**
 
 * Response Body
