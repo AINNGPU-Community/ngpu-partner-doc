@@ -62,7 +62,7 @@ data|string|进行透传的数据内容（可以保存原API接口中的Request 
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|string|用户的BTC地址（可选项，如果存在则会检测用户的地址中是否有AINN资产，如果为空则不检查）
+result_code|string|返回值 200为成功，非200为不成功
 msg|string|返回的信息内容
 data|string|返回任务结果（这里采用透传方式，将原API接口返回的Response Body放入此参数中）
 
@@ -99,6 +99,7 @@ data|string|返回任务结果（这里采用透传方式，将原API接口返�
 #### 对接后API接口
 * 协议类型：POST
 * 协议地址：https://ainngpu.io/user/schedulingTask?paramUrl=sdapi/v1/img2img&paramPort=8080
+* 协议头：Authorization：Bearer 工作空间ID
 
 Parameter:
 - paramUrl: 在调用计算节点时使用的URL路径。
@@ -128,7 +129,7 @@ data|string|进行透传的数据内容（可以保存原API接口中的Request 
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|string|用户的BTC地址（可选项，如果存在则会检测用户的地址中是否有AINN资产，如果为空则不检查）
+result_code|string|返回值 200为成功，非200为不成功
 msg|string|返回的信息内容
 data|string|返回任务结果（这里采用透传方式，将原API接口返回的Response Body放入此参数中）
 taskID|string|返回查询的任务ID
@@ -151,7 +152,7 @@ taskID|string|返回查询的任务ID
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|string|用户的BTC地址（可选项，如果存在则会检测用户的地址中是否有AINN资产，如果为空则不检查）
+result_code|string|返回值 200为成功，非200为不成功
 msg|string|返回的信息内容
 taskID|string|返回查询的任务ID
 
@@ -171,7 +172,7 @@ taskID|string|返回查询的任务ID
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|string|用户的BTC地址（可选项，如果存在则会检测用户的地址中是否有AINN资产，如果为空则不检查）
+result_code|string|返回值 200为成功，非200为不成功
 msg|string|返回的信息内容
 taskID|string|返回查询的任务ID
 data|string|查询返回结果
@@ -202,3 +203,100 @@ Field Name | Field Type | Field Meaning
 exists|bool|用户BTC地址上是否存在指定的BRC20铭文
 names|[]string|用户BTC地址上的铭文名称
 balances|[]int|用户BTC地址上存在的铭文数量（与铭文名称对应）
+
+## 根据工作空间Id查询任务列表接口
+* 作用：根据工作空间ID与起止时间（可以省略），查询任务列表
+
+* 协议类型：GET
+* 协议地址：https://ainngpu.io/user/queryTaskList?startTime=2024-04-11&endTime=2024-04-20
+* 协议头：Authorization：Bearer 工作空间ID
+**_startTime非必填，如果没有，则按照1970-01-01时间取值，endTime非必填，如果没有则按照2099-01-01取值_**
+
+* Response Body
+```shell
+{
+	"result_code": 200,
+	"msg": "success",
+	"result_size": 4,
+	"taskIds": [
+		"20240411_13_36_11_922124",
+		"20240411_14_37_10_405715",
+		"20240411_14_53_35_843805",
+		"20240411_14_54_23_785178"
+	]
+}
+```
+Field Name | Field Type | Field Meaning
+----|:----:|:----:|
+result_code|string|返回值 200为成功，非200为不成功
+msg|string|返回的信息内容
+result_size|int|任务数量
+taskIds|[]string|任务ID列表
+
+## 根据任务ID查询任务详细内容接口
+* 作用：根据工作空间ID与起止时间（可以省略），查询任务列表
+
+* 协议类型：GET
+* 协议地址：https://ainngpu.io/user/getDetailed?taskID=20240415_14_30_09_891041
+
+* Response Body
+```shell
+{
+	"result_code": 200,
+	"msg": "success",
+	"taskInfo": {
+		"id": 2687,
+		"userkey": "ts-22a51e64-a535-4c2a-8c20-3e7f2b4fbc2c",
+		"btcaddress": "0000000000000000000000000GFg7xJaNVN2",
+		"workspaceid": "367614711220405248",
+		"taskid": "20240415_14_30_09_891041",
+		"requrl": "/user/schedulingTask?paramUrl=create",
+		"method": "schedulingTask",
+		"userip": "94.74.66.215",
+		"nodeip": "43.240.1.180",
+		"nodeaddr": "0xCac10F51814E8e425a6877951fecb7746161c669",
+		"requesttime": "2024-04-15 14:30:11",
+		"responsetime": "2024-04-15 14:30:12",
+		"request": "{\"gz\": true, \"py\": \"H4sIAHHJHGYC/61UXW/TMBR9z6+wvIc20LpNOyZaqRM8ARIaExsSaKosL3EaM8fXsp2Wahq/HSemXbdkExK7L3HuOffr+EOUGoxDYKPcQIncVgu1QiJ4PwvrogDcCK1J5YS0O9ByV2kqYbXiZoBMpWgKZclUFkXBiRYPOH1sUyO0o1poHEdRlPEc+TUVyjomZV+z9IatuJ03da+sM8sYDU/RGSg+j5A3jPGnQEY7Mqps3bDPQ6KG896sbGDXtqf173POkSv4PeIA/e2A7Io039A1ESqHfo59gR0N3e5i7/wcNRUqpyvn5z1Q4XFMD/XITxBqP2Z8hwcoGaNX6GQcd1TcRfp8WnLHB+g21KmrNuJxxa4lp9rAr20/DkODJVythQF1hQvndEDx0jfX/M9HI8mEvdnOJ1NTiGlh8moC03fXCQl+4ut57HiW4M6E9kUzfry8PKfnX798//GCCS/+K2PQNhP2OXGJBt0/FDh+kmCfZRwI8DThYs+IRI4oVazklKKFH4/SkglFKQ4dPjwSjevwiu3vxdV+VdsRwtrWlxsPHvut5jxz3LphKkUb/nD+rTNMb4epruqT3IWpddkRwwTUerWB+u1peY/Q8F+sFeWF8Ar5/c1z/3SAsi+Ut6e3aZWxXqv7UIkb+3sxJpOT9ngOTFqcLiZkTJKOMfEwR8058qc4g42SwDKit00UAbMabQo5av5omI0UrpSo8Sx81oQkr9MqSd52VDZM2RxM2XR3TKazjl1JUy65YY537KSQEjanixl5Q8ZtGDRX6Xroey1APYJxkOvAu2xWcfQHYMkP3JIGAAA=\", \"ts\": \"1713162609.246125\", \"sig\": \"qkwm0rSayLeFxavtMkaTmwqIxzuzHI1BucQ8UwGiEm2N23/5uRSm6i9AJvWVCCpJKbia3s9grB/59BsLDLbgBA==\"}",
+		"state": 3,
+		"response": "{\"task_id\": \"37a41eba-23d2-4490-aca9-b84b1c2408f6\"}",
+		"recordDursion": 1,
+		"videodursion": 0,
+		"gpudursion": 1,
+		"watermarktime": "",
+		"watermarkres": ""
+	}
+}
+```
+Field Name | Field Type | Field Meaning
+----|:----:|:----:|
+result_code|string|返回值 200为成功，非200为不成功
+msg|string|返回的信息内容
+id|int|标记任务的id
+userkey|string|用户使用的userKey
+btcaddress|string|用户的BTC地址
+workspaceid|string|工作空间ID
+taskid|string|任务ID
+requrl|string|请求的url路径
+method|string|使用的方法
+userip|string|发起请求的用户Ip地址
+nodeip|string|处理请求的算力节点Ip
+nodeaddr|string|处理请求的算力节点地址
+requesttime|string|请求发起时间
+responsetime|string|相应时间
+request|string|请求的数据内容（此处只做记录，app可以进行加密）
+state|int|任务当前状态（3：任务已经完成）
+response|string|算力节点返回的数据内容（此处只做激励，算力节点中的工作空间可以进行加密）
+recordDursion|int|记录消耗时间
+~~videodursion|int|已经废弃~~
+gpudursion|int|GPU消耗时间
+~~watermarktime|string|已废弃~~
+~~watermarkres|string|已废弃~~
+
+
+
+
+
+
+
+

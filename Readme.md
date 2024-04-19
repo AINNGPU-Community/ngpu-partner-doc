@@ -62,7 +62,7 @@ data|string|Data content for pass-through (can retain original API request body)
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|string|Optional user's BTC address (checks for AINN assets if provided, skips if empty)
+result_code|string|Return code: 200 indicates success, non-200 indicates failure.
 msg|string|Message content
 data|string|Task result (using pass-through, includes original API response body)
 
@@ -99,6 +99,7 @@ data|string|Task result (using pass-through, includes original API response body
 #### Post-Integration API Interface
 * Protocol Type: POST
 * Protocol Address：https://ainngpu.io/user/schedulingTask?paramUrl=sdapi/v1/img2img&paramPort=8080
+* Header：Authorization：Bearer Bearer Workspace ID
 
 Parameter:
 - paramUrl: URL path used when calling the compute node.
@@ -128,7 +129,7 @@ data|string|Data content for pass-through (can retain original API request body)
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|string|Optional user's BTC address (checks for AINN assets if provided, skips if empty)
+result_code|string|Return code: 200 indicates success, non-200 indicates failure.
 msg|string|Message content
 data|string|Query return result
 taskID|string|Returned task ID
@@ -151,7 +152,7 @@ taskID|string|Returned task ID
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|string|Optional user's BTC address (checks for AINN assets if provided, skips if empty)
+result_code|string|Return code: 200 indicates success, non-200 indicates failure.
 msg|string|Message content
 taskID|string|Returned task ID
 
@@ -171,7 +172,7 @@ taskID|string|Returned task ID
 ```
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-result_code|string|Optional user's BTC address (checks for AINN assets if provided, skips if empty)
+result_code|string|Return code: 200 indicates success, non-200 indicates failure.
 msg|string|Message content
 taskID|string|Returned task ID
 data|string|Query return result
@@ -202,3 +203,100 @@ Field Name | Field Type | Field Meaning
 exists|bool|Whether a specified BRC20 inscription exists on the user's BTC address
 names|[]string|Names of the inscriptions on the user's BTC address
 balances|[]int|Quantity of each inscription on the user's BTC address (corresponding to the inscription names)
+
+## Interface to Query Task List by Workspace ID
+* Purpose: Query the task list using the Workspace ID and optional start and end times.
+
+* Protocol Type: GET
+* URL：https://ainngpu.io/user/queryTaskList?startTime=2024-04-11&endTime=2024-04-20
+* Header：Authorization：Bearer Bearer Workspace ID
+**_startTime is optional; if not provided, the default value is 1970-01-01. endTime is optional; if not provided, the default value is 2099-01-01._**
+
+* Response Body
+```shell
+{
+	"result_code": 200,
+	"msg": "success",
+	"result_size": 4,
+	"taskIds": [
+		"20240411_13_36_11_922124",
+		"20240411_14_37_10_405715",
+		"20240411_14_53_35_843805",
+		"20240411_14_54_23_785178"
+	]
+}
+```
+Field Name | Field Type | Field Meaning
+----|:----:|:----:|
+result_code|string|Return code: 200 indicates success, non-200 indicates failure.
+msg|string|Message content returned.
+result_size|int|Number of tasks.
+taskIds|[]string|List of task IDs.
+
+## Interface to Query Task Details by Task ID
+* Purpose: Query task details using the Task ID.
+
+* Protocol Type: GET
+* URL: https://ainngpu.io/user/getDetailed?taskID=20240415_14_30_09_891041
+
+* Response Body
+```shell
+{
+	"result_code": 200,
+	"msg": "success",
+	"taskInfo": {
+		"id": 2687,
+		"userkey": "ts-22a51e64-a535-4c2a-8c20-3e7f2b4fbc2c",
+		"btcaddress": "0000000000000000000000000GFg7xJaNVN2",
+		"workspaceid": "367614711220405248",
+		"taskid": "20240415_14_30_09_891041",
+		"requrl": "/user/schedulingTask?paramUrl=create",
+		"method": "schedulingTask",
+		"userip": "94.74.66.215",
+		"nodeip": "43.240.1.180",
+		"nodeaddr": "0xCac10F51814E8e425a6877951fecb7746161c669",
+		"requesttime": "2024-04-15 14:30:11",
+		"responsetime": "2024-04-15 14:30:12",
+		"request": "{\"gz\": true, \"py\": \"H4sIAHHJHGYC/61UXW/TMBR9z6+wvIc20LpNOyZaqRM8ARIaExsSaKosL3EaM8fXsp2Wahq/HSemXbdkExK7L3HuOffr+EOUGoxDYKPcQIncVgu1QiJ4PwvrogDcCK1J5YS0O9ByV2kqYbXiZoBMpWgKZclUFkXBiRYPOH1sUyO0o1poHEdRlPEc+TUVyjomZV+z9IatuJ03da+sM8sYDU/RGSg+j5A3jPGnQEY7Mqps3bDPQ6KG896sbGDXtqf173POkSv4PeIA/e2A7Io039A1ESqHfo59gR0N3e5i7/wcNRUqpyvn5z1Q4XFMD/XITxBqP2Z8hwcoGaNX6GQcd1TcRfp8WnLHB+g21KmrNuJxxa4lp9rAr20/DkODJVythQF1hQvndEDx0jfX/M9HI8mEvdnOJ1NTiGlh8moC03fXCQl+4ut57HiW4M6E9kUzfry8PKfnX798//GCCS/+K2PQNhP2OXGJBt0/FDh+kmCfZRwI8DThYs+IRI4oVazklKKFH4/SkglFKQ4dPjwSjevwiu3vxdV+VdsRwtrWlxsPHvut5jxz3LphKkUb/nD+rTNMb4epruqT3IWpddkRwwTUerWB+u1peY/Q8F+sFeWF8Ar5/c1z/3SAsi+Ut6e3aZWxXqv7UIkb+3sxJpOT9ngOTFqcLiZkTJKOMfEwR8058qc4g42SwDKit00UAbMabQo5av5omI0UrpSo8Sx81oQkr9MqSd52VDZM2RxM2XR3TKazjl1JUy65YY537KSQEjanixl5Q8ZtGDRX6Xroey1APYJxkOvAu2xWcfQHYMkP3JIGAAA=\", \"ts\": \"1713162609.246125\", \"sig\": \"qkwm0rSayLeFxavtMkaTmwqIxzuzHI1BucQ8UwGiEm2N23/5uRSm6i9AJvWVCCpJKbia3s9grB/59BsLDLbgBA==\"}",
+		"state": 3,
+		"response": "{\"task_id\": \"37a41eba-23d2-4490-aca9-b84b1c2408f6\"}",
+		"recordDursion": 1,
+		"videodursion": 0,
+		"gpudursion": 1,
+		"watermarktime": "",
+		"watermarkres": ""
+	}
+}
+```
+Field Name | Field Type | Field Meaning
+----|:----:|:----:|
+result_code|string|Return code: 200 indicates success, non-200 indicates failure.
+msg|string|Message content returned.
+id|int|Identifier of the task.
+userkey|string|User's unique userKey.
+btcaddress|string|User's BTC address.
+workspaceid|string|Workspace ID.
+taskid|string|Task ID.
+requrl|string|URL path of the request.
+method|string|Method used.
+userip|string|IP address of the user initiating the request.
+nodeip|string|IP address of the compute node processing the request.
+nodeaddr|string|Address of the compute node processing the request.
+requesttime|string|Time the request was initiated.
+responsetime|string|Time of the response.
+request|string|Request data content (recorded here; encryption is possible in the app).
+state|int|Current state of the task (3: task has been completed).
+response|string|Data content returned by the compute node (recorded here; encryption is possible in the workspace).
+recordDursion|int|Time taken to record.
+~~videodursion|int|Deprecated~~
+gpudursion|int|Time taken by GPU processing.
+~~watermarktime|string|Deprecated~~
+~~watermarkres|string|Deprecated~~
+
+
+
+
+
+
+
+
