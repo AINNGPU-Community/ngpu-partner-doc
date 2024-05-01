@@ -107,6 +107,12 @@ Parameter:
 
 **_These parameters ensure that the apiServer can correctly transfer data to the compute node's Docker image._**
 
+Field Name | Field Type | Field Meaning
+----|:----:|:----:|
+sdapi/v1/img2img|string|Use the img2img interface with stable Diffusion
+sadTalker|string|Use the open source sadTalker interface
+videoReTalker|string|Use the open source videoReTalker interface
+
 * Request Body
 ```shell
 {
@@ -209,7 +215,8 @@ balances|[]int|Quantity of each inscription on the user's BTC address (correspon
 
 * Protocol Type: GET
 * URL：https://ainngpu.io/user/queryTaskList?startTime=2024-04-11&endTime=2024-04-20
-* Header：Authorization：Bearer Workspace ID
+* Header：Authorization：Bearer Workspace ID  
+
 **_startTime is optional; if not provided, the default value is 1970-01-01. endTime is optional; if not provided, the default value is 2099-01-01._**
 
 * Response Body

@@ -107,6 +107,12 @@ Parameter:
 
 **_这两个参数是为了保障apiServer在进行数据中转时能都正确的中转给算力节点的Docker镜像_**
 
+Field Name | Field Type | Field Meaning
+----|:----:|:----:|
+sdapi/v1/img2img|string|使用stable Diffusion的img2img接口
+sadTalker|string|使用开源sadTalker接口
+videoReTalker|string|使用开源videoReTalker接口
+
 * Request Body
 ```shell
 {

@@ -107,6 +107,12 @@ Parameter:
 
 **_These parameters ensure that the apiServer can correctly transfer data to the compute node's Docker image._**
 
+Field Name | Field Type | Field Meaning
+----|:----:|:----:|
+sdapi/v1/img2img|string|Use the img2img interface with stable Diffusion
+sadTalker|string|Use the open source sadTalker interface
+videoReTalker|string|Use the open source videoReTalker interface
+
 * Request Body
 ```shell
 {
