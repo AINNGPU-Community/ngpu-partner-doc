@@ -1,14 +1,14 @@
 
 API Integration for Compute Power Demand Side
 =======
-* When using AINNGPU for API integration, the compute power demand side needs to provide their workspace (a Docker image encapsulating their own AI capabilities). AINNGPU will deploy this Docker image across multiple nodes and make intelligent node selections. Since AINNGPU employs a parameter pass-through method, the following steps can be used during API integration.
+* When using NGPU for API integration, the compute power demand side needs to provide their workspace (a Docker image encapsulating their own AI capabilities). NGPU will deploy this Docker image across multiple nodes and make intelligent node selections. Since NGPU employs a parameter pass-through method, the following steps can be used during API integration.
 -----------
 
 # Integration Steps
 
 + The compute power demand side provides their runnable Docker image, including the Docker image's startup commands.
 + The compute power demand side provides the type and number of GPUs required.
-+ The compute power demand side provides the Docker-supported APIs (AINNGPU will use a pass-through mode for API parameter data transmission).
++ The compute power demand side provides the Docker-supported APIs (NGPU will use a pass-through mode for API parameter data transmission).
 
 # Example of API Integration
 
@@ -23,7 +23,7 @@ API Integration for Compute Power Demand Side
 * Request Body
 ```shell
 {
-    "image_url": "https://ainngpu.io/image/1683730315image.jpeg",
+    "image_url": "https://ngpu.ai/image/1683730315image.jpeg",
     "prompt": "manicured claws, score_9, score_8_up, score_7_up, score_6_up, score_5_up, score_4_up, 1girl, realistic, extremely detailed, high quality, , beautiful eyes, cat woman, black suit, character concept,night time, dark shadows, dutch angle"
 }
 ```
@@ -32,13 +32,13 @@ API Integration for Compute Power Demand Side
 {
 	"result_code": 100,
 	"msg": "SUCCESS! The video is currently in the queue waiting to be processed",
-    "image_url": "https://ainngpu.io/image/16837303689.jpeg"
+    "image_url": "https://ngpu.ai/image/16837303689.jpeg"
 }
 ```
 
 #### Post-Integration API Interface
 * Protocol Type: POST
-* Protocol Address: https://ainngpu.io/user/img2img
+* Protocol Address: https://ngpu.ai/user/img2img
 * Request Body
 ```shell
 {
@@ -82,7 +82,7 @@ data|string|Task result (using pass-through, includes original API response body
 
 ```shell
 {
-    "image_url": "https://ainngpu.io/image/1683730315image.jpeg",
+    "image_url": "https://ngpu.ai/image/1683730315image.jpeg",
     "prompt": "manicured claws, score_9, score_8_up, score_7_up, score_6_up, score_5_up, score_4_up, 1girl, realistic, extremely detailed, high quality, , beautiful eyes, cat woman, black suit, character concept,night time, dark shadows, dutch angle"
 }
 ```
@@ -98,7 +98,7 @@ data|string|Task result (using pass-through, includes original API response body
 
 #### Post-Integration API Interface
 * Protocol Type: POST
-* Protocol Address：https://ainngpu.io/user/schedulingTask?paramUrl=sdapi/v1/img2img&paramPort=8080
+* Protocol Address：https://ngpu.ai/user/schedulingTask?paramUrl=sdapi/v1/img2img&paramPort=8080
 * Header：Authorization：Bearer Workspace ID
 
 Parameter:
@@ -165,7 +165,7 @@ taskID|string|Returned task ID
 
 #### Post-Integration API Interface
 * Protocol Type: GET
-* Protocol Address: https://ainngpu.io/user/queryTask&taskID=20230423_11_23_05_10279
+* Protocol Address: https://ngpu.ai/user/queryTask&taskID=20230423_11_23_05_10279
 
 * Response Body
 ```shell
@@ -190,7 +190,7 @@ data|string|Query return result
 * Function: Checks if a specified BRC20 inscription exists on a given BTC address.
 
 * Protocol Type: GET
-* Protocol Address: https://ainngpu.io/brc20/checkAddress&address=bc1pp8vyhh2ma0ntzjwr26xxrn5r0w296yu68wdwle5rrhgtv3a2lgkqtyayus
+* Protocol Address: https://ngpu.ai/brc20/checkAddress&address=bc1pp8vyhh2ma0ntzjwr26xxrn5r0w296yu68wdwle5rrhgtv3a2lgkqtyayus
 
 * Response Body
 ```shell
@@ -214,7 +214,7 @@ balances|[]int|Quantity of each inscription on the user's BTC address (correspon
 * Purpose: Query the task list using the Workspace ID and optional start and end times.
 
 * Protocol Type: GET
-* URL：https://ainngpu.io/user/queryTaskList?startTime=2024-04-11&endTime=2024-04-20
+* URL：https://ngpu.ai/user/queryTaskList?startTime=2024-04-11&endTime=2024-04-20
 * Header：Authorization：Bearer Workspace ID  
 
 **_startTime is optional; if not provided, the default value is 1970-01-01. endTime is optional; if not provided, the default value is 2099-01-01._**
@@ -244,7 +244,7 @@ taskIds|[]string|List of task IDs.
 * Purpose: Query task details using the Task ID.
 
 * Protocol Type: GET
-* URL: https://ainngpu.io/user/getDetailed?taskID=20240415_14_30_09_891041
+* URL: https://ngpu.ai/user/getDetailed?taskID=20240415_14_30_09_891041
 
 * Response Body
 ```shell
