@@ -1,14 +1,14 @@
 
 算力需求方API对接
 =======
-* 算力需求方在使用AINNGPU进行API对接时，需要提供给AINNGPU自己的工作空间（封装了自己AI功能的Docker镜像），AINNGPU将会根据根据这个Docker镜像进行多点部署与节点智能选择。由于AINNGPU采用的是参数透传的方式，因此在对接API的时候可以采用以下步骤进行。
+* 算力需求方在使用NGPU进行API对接时，需要提供给NGPU自己的工作空间（封装了自己AI功能的Docker镜像），NGPU将会根据根据这个Docker镜像进行多点部署与节点智能选择。由于NGPU采用的是参数透传的方式，因此在对接API的时候可以采用以下步骤进行。
 -----------
 
 # 对接步骤
 
 + 算力需求方提供自己可运行的Docker镜像，包括Docker镜像的启动指令。
 + 算力需求方提供自己所需GPU的类型以及部署数量。
-+ 算力需求方提供Docker所支持的API（AINNGPU将采用透传模式进行API参数数据的透传）
++ 算力需求方提供Docker所支持的API（NGPU将采用透传模式进行API参数数据的透传）
 
 # API对接例子
 
@@ -23,7 +23,7 @@
 * Request Body
 ```shell
 {
-    "image_url": "https://ainngpu.io/image/1683730315image.jpeg",
+    "image_url": "https://ngpu.ai/image/1683730315image.jpeg",
     "prompt": "manicured claws, score_9, score_8_up, score_7_up, score_6_up, score_5_up, score_4_up, 1girl, realistic, extremely detailed, high quality, , beautiful eyes, cat woman, black suit, character concept,night time, dark shadows, dutch angle"
 }
 ```
@@ -32,13 +32,13 @@
 {
 	"result_code": 100,
 	"msg": "SUCCESS! The video is currently in the queue waiting to be processed",
-    "image_url": "https://ainngpu.io/image/16837303689.jpeg"
+    "image_url": "https://ngpu.ai/image/16837303689.jpeg"
 }
 ```
 
 #### 对接后API接口
 * 协议类型：POST
-* 协议地址：https://ainngpu.io/user/img2img
+* 协议地址：https://ngpu.ai/user/img2img
 * Request Body
 ```shell
 {
@@ -82,7 +82,7 @@ data|string|返回任务结果（这里采用透传方式，将原API接口返�
 
 ```shell
 {
-    "image_url": "https://ainngpu.io/image/1683730315image.jpeg",
+    "image_url": "https://ngpu.ai/image/1683730315image.jpeg",
     "prompt": "manicured claws, score_9, score_8_up, score_7_up, score_6_up, score_5_up, score_4_up, 1girl, realistic, extremely detailed, high quality, , beautiful eyes, cat woman, black suit, character concept,night time, dark shadows, dutch angle"
 }
 ```
@@ -98,7 +98,7 @@ data|string|返回任务结果（这里采用透传方式，将原API接口返�
 
 #### 对接后API接口
 * 协议类型：POST
-* 协议地址：https://ainngpu.io/user/schedulingTask?paramUrl=sdapi/v1/img2img&paramPort=8080
+* 协议地址：https://ngpu.ai/user/schedulingTask?paramUrl=sdapi/v1/img2img&paramPort=8080
 * 协议头：Authorization：Bearer 工作空间ID
 
 Parameter:
@@ -107,9 +107,9 @@ Parameter:
 
 **_这两个参数是为了保障apiServer在进行数据中转时能都正确的中转给算力节点的Docker镜像_**
 
+**后续将增加的接口**
 Field Name | Field Type | Field Meaning
 ----|:----:|:----:|
-sdapi/v1/img2img|string|使用stable Diffusion的img2img接口
 sadTalker|string|使用开源sadTalker接口
 videoReTalker|string|使用开源videoReTalker接口
 
@@ -165,7 +165,7 @@ taskID|string|返回查询的任务ID
 
 #### 对接后API接口
 * 协议类型：GET
-* 协议地址：https://ainngpu.io/user/queryTask&taskID=20230423_11_23_05_10279
+* 协议地址：https://ngpu.ai/user/queryTask&taskID=20230423_11_23_05_10279
 
 * Response Body
 ```shell
@@ -190,7 +190,7 @@ data|string|查询返回结果
 * 作用：检测输入的BTC地址是否拥有BRC20指定的铭文。
 
 * 协议类型：GET
-* 协议地址：https://ainngpu.io/brc20/checkAddress&address=bc1pp8vyhh2ma0ntzjwr26xxrn5r0w296yu68wdwle5rrhgtv3a2lgkqtyayus
+* 协议地址：https://ngpu.ai/brc20/checkAddress&address=bc1pp8vyhh2ma0ntzjwr26xxrn5r0w296yu68wdwle5rrhgtv3a2lgkqtyayus
 
 * Response Body
 ```shell
@@ -210,11 +210,52 @@ exists|bool|用户BTC地址上是否存在指定的BRC20铭文
 names|[]string|用户BTC地址上的铭文名称
 balances|[]int|用户BTC地址上存在的铭文数量（与铭文名称对应）
 
+
+## 照片生成视频
+* 作用：用户上传一张照片和文字即可生成一段视频。
+
+* 协议类型：POST
+* 协议地址：https://ngpu.ai/user/sadTalker
+
+* Request Body
+```shell
+{
+    "image_url": "https://twinsync.oss-cn-hangzhou.aliyuncs.com/video/1683730315image.jpeg",
+    "text": "你好，我是马斯克。听说今天是中国的腊八节，不知道大家吃了腊八粥了没有？我在美国祝大家腊八节快乐！",
+    "pronouncer": "fable",
+    "backGroundName": "laba",
+    "btc_address": "bc1pv0egqadxd60ae4r7v77gewpvjvsza09kccsxztzx8c8pqccn0rgqqw7np5"
+}
+```
+
+
+* Response Body
+```shell
+{
+	"exists": true,
+	"names": [
+		"AINN"
+	],
+	"balances": [
+		100
+	]
+}
+```
+Field Name | Field Type | Field Meaning
+----|:----:|:----:|
+exists|bool|用户BTC地址上是否存在指定的BRC20铭文
+names|[]string|用户BTC地址上的铭文名称
+balances|[]int|用户BTC地址上存在的铭文数量（与铭文名称对应）
+
+
+
+
+
 ## 根据工作空间Id查询任务列表接口
 * 作用：根据工作空间ID与起止时间（可以省略），查询任务列表
 
 * 协议类型：GET
-* 协议地址：https://ainngpu.io/user/queryTaskList?startTime=2024-04-11&endTime=2024-04-20
+* 协议地址：https://ngpu.ai/user/queryTaskList?startTime=2024-04-11&endTime=2024-04-20
 * 协议头：Authorization：Bearer 工作空间ID  
 
 **_startTime非必填，如果没有，则按照1970-01-01时间取值，endTime非必填，如果没有则按照2099-01-01取值_**
@@ -244,7 +285,7 @@ taskIds|[]string|任务ID列表
 * 作用：根据工作空间ID与起止时间（可以省略），查询任务列表
 
 * 协议类型：GET
-* 协议地址：https://ainngpu.io/user/getDetailed?taskID=20240415_14_30_09_891041
+* 协议地址：https://ngpu.ai/user/getDetailed?taskID=20240415_14_30_09_891041
 
 * Response Body
 ```shell
