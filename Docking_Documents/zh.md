@@ -281,6 +281,36 @@ msg|string|返回的信息内容
 result_size|int|任务数量
 taskIds|[]string|任务ID列表
 
+## 根据工作空间Id、算力节点地址查询任务列表接口
+* 作用：根据工作空间ID、算力节点地址与起止时间（可以省略），查询任务列表
+
+* 协议类型：GET
+* 协议地址：https://ngpu.ai/user/getTasksFromNode?nodeAddr=0xf54B48DBD69d4f0841e458a551422Cf8eC1DEaaa&startTime=2024-04-11&endTime=2024-04-20
+* 协议头：Authorization：Bearer 工作空间ID  
+
+**_startTime非必填，如果没有，则按照1970-01-01时间取值，endTime非必填，如果没有则按照2099-01-01取值_**
+
+* Response Body
+```shell
+{
+	"result_code": 200,
+	"msg": "success",
+	"result_size": 4,
+	"taskIds": [
+		"20240411_13_36_11_922124",
+		"20240411_14_37_10_405715",
+		"20240411_14_53_35_843805",
+		"20240411_14_54_23_785178"
+	]
+}
+```
+Field Name | Field Type | Field Meaning
+----|:----:|:----:|
+result_code|string|返回值 200为成功，非200为不成功
+msg|string|返回的信息内容
+result_size|int|任务数量
+taskIds|[]string|任务ID列表
+
 ## 根据任务ID查询任务详细内容接口
 * 作用：根据工作空间ID与起止时间（可以省略），查询任务列表
 

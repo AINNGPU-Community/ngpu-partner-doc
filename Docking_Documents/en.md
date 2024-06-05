@@ -240,6 +240,39 @@ msg|string|Message content returned.
 result_size|int|Number of tasks.
 taskIds|[]string|List of task IDs.
 
+
+## Query Task List Interface Based on Workspace ID and Computing Node Address
+* Purpose: Query the task list based on Workspace ID, computing node address, and optional start and end times.
+
+* Protocol Type: GET
+* URL：https://ngpu.ai/user/getTasksFromNode?nodeAddr=0xf54B48DBD69d4f0841e458a551422Cf8eC1DEaaa&startTime=2024-04-11&endTime=2024-04-20
+* Header：Authorization：Bearer Workspace ID  
+
+**_startTime is optional; if not provided, the default value is 1970-01-01. endTime is optional; if not provided, the default value is 2099-01-01._**
+
+* Response Body
+```shell
+{
+	"result_code": 200,
+	"msg": "success",
+	"result_size": 4,
+	"taskIds": [
+		"20240411_13_36_11_922124",
+		"20240411_14_37_10_405715",
+		"20240411_14_53_35_843805",
+		"20240411_14_54_23_785178"
+	]
+}
+```
+Field Name | Field Type | Field Meaning
+----|:----:|:----:|
+result_code|string|Return code: 200 indicates success, non-200 indicates failure.
+msg|string|Message content returned.
+result_size|int|Number of tasks.
+taskIds|[]string|List of task IDs.
+
+
+
 ## Interface to Query Task Details by Task ID
 * Purpose: Query task details using the Task ID.
 
