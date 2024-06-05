@@ -281,6 +281,43 @@ msg|string|返回的信息内容
 result_size|int|任务数量
 taskIds|[]string|任务ID列表
 
+## 根据工作空间Id查询分发算力节点列表接口
+* 作用：根据工作空间ID与起止时间（可以省略），查询分发的算力节点列表
+
+* 协议类型：GET
+* 协议地址：https://ngpu.ai/user/queryNodes
+* 协议头：Authorization：Bearer 工作空间ID  
+
+* Response Body
+```shell
+{
+	"result_code": 200,
+	"msg": "success",
+	"result_size": 2,
+	"nodes": [
+		{
+			"nodeAddr": "0x732637A3A3E0D335Dc00d9F8fba8a1033831Bf13",
+			"progress": 100,
+			"status": 1
+		},
+		{
+			"nodeAddr": "0xf54B48DBD69d4f0841e458a551422Cf8eC1DEaaa",
+			"progress": 100,
+			"status": 0
+		}
+	]
+}
+```
+Field Name | Field Type | Field Meaning
+----|:----:|:----:|
+result_code|string|返回值 200为成功，非200为不成功
+msg|string|返回的信息内容
+result_size|int|任务数量
+nodes|[]string|分发的算力节点
+nodeAddr|string|算力节点地址
+progress|int|分发进度
+status|int|分发状态
+
 ## 根据工作空间Id、算力节点地址查询任务列表接口
 * 作用：根据工作空间ID、算力节点地址与起止时间（可以省略），查询任务列表
 

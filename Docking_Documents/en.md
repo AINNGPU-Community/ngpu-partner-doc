@@ -241,6 +241,49 @@ result_size|int|Number of tasks.
 taskIds|[]string|List of task IDs.
 
 
+
+
+## Query Distributed Compute Node List Interface Based on Workspace ID
+* Purpose: Query the list of distributed compute nodes based on Workspace ID.
+
+* Protocol Type: GET
+* URL：https://ngpu.ai/user/queryNodes
+* Header：Authorization：Bearer Workspace ID  
+
+* Response Body
+```shell
+{
+    "result_code": 200,
+    "msg": "success",
+    "result_size": 2,
+    "nodes": [
+        {
+            "nodeAddr": "0x732637A3A3E0D335Dc00d9F8fba8a1033831Bf13",
+            "progress": 100,
+            "status": 1
+        },
+        {
+            "nodeAddr": "0xf54B48DBD69d4f0841e458a551422Cf8eC1DEaaa",
+            "progress": 100,
+            "status": 0
+        }
+    ]
+}
+```
+Field Name | Field Type | Field Meaning
+----|:----:|:----:|
+result_code|string|Return code: 200 indicates success, non-200 indicates failure.
+msg|string|Message content returned.
+result_size|int|Number of tasks.
+nodeAddr|string|Compute node address
+progress|int|Distribution progress
+status|int|Distribution status
+
+
+
+
+
+
 ## Query Task List Interface Based on Workspace ID and Computing Node Address
 * Purpose: Query the task list based on Workspace ID, computing node address, and optional start and end times.
 
